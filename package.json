@@ -9,6 +9,7 @@
   "author": "Clément Bourgoin <cb@nokto.net> (http://nokto.net/)",
   "license": "MIT",
   "dependencies": {
+    "nconf": "^0.8.4",
     "node-hue-api": "^2.3.0"
   }
 }
