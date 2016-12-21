@@ -3,23 +3,38 @@
 'use strict';
 
 const nconf = require('nconf');
-const hue   = require("node-hue-api");
+const hue   = require('node-hue-api');
+const fs    = require('fs');
 
 // Load configuration
-nconf.argv().env().file({ file: 'config.json' });
+const configFile = process.env.HOME + '/.colorloop'
+nconf.argv().env().file({ file: configFile });
 
-const username = nconf.get('username');
-const lightId = nconf.get('lightId');
+let username = nconf.get('username');
+let light = nconf.get('light');
 
-if (!username) {
-  throw 'Username must be defined';
-}
+const registerUser = function(host) {
+  const hueApi = new hue.HueApi();
+  hueApi.registerUser(host, 'colorloop')
+    .then(function(user) {
+      nconf.set('username', user);
+      nconf.save();
+      process.stdout.write(`A new device has been registered on the bridge with id ${user} and cached locally for future uses.\n`);
+    })
+    .fail(function(err) {
+      process.stdout.write(`An error occured while trying to register a new device. Did you press the link button on your Hue bridge?\n`);
+      process.exit();
+    })
+    .done();
+};
 
-if (!lightId) {
-  throw 'Light id must be defined';
-}
+const setColorLoop = function() {
 
-const setColorLoop = function(host, username) {
+  if (!username) {
+    registerUser(host);
+    return;
+  }
+
   const api = new hue.HueApi(host, username),
     state = hue.lightState.create()
 
@@ -42,8 +57,10 @@ if (typeof host === 'undefined') {
     }
     host = bridges[0].ipaddress;
     process.stdout.write(`Found a bridge via upnp @ ${host} \n`);
-    setColorLoop(host, username);
+    setColorLoop();
   }).done();
 } else {
-  setColorLoop(host, username);
+  setColorLoop();
 }
+
+nconf.save();
