@@ -13,7 +13,10 @@ nconf.argv().env().file({ file: configFile });
 
 yargs
    .usage('$0 --light [id]')
-   .describe('light', 'the light to set in color loop mode')
+   .option('l', {
+     'alias': 'light',
+     'describe': 'the light to set in color loop mode'
+   })
    .help()
    .argv
 
