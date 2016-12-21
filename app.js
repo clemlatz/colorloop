@@ -31,9 +31,11 @@ const registerUser = function(host) {
   const hueApi = new hue.HueApi();
   hueApi.registerUser(host, 'colorloop')
     .then(function(user) {
+      username = user;
       nconf.set('username', user);
       nconf.save();
       process.stdout.write(`A new device has been registered on the bridge with id ${user} and cached locally for future uses.\n`);
+      setColorLoop();
     })
     .fail(function(err) {
       process.stdout.write(`An error occured while trying to register a new device. Did you press the link button on your Hue bridge?\n`);
