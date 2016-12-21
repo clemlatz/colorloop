@@ -1,6 +1,6 @@
 {
   "name": "colorloop",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "A simple CLI tool to enable the colorloop mode of the Hue Lightstrip Plus in my Christmas tree",
   "main": "app.js",
   "scripts": {
