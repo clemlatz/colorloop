@@ -57,10 +57,12 @@ const setColorLoop = function() {
     api.setLightState(light, state.on().effectColorLoop())
       .then(function(result) {
         if (result === true) {
-          process.stdout.write('Color loop mode enabled! \n');
+          process.stdout.write('Colorloop mode enabled! \n');
         }
       })
-      .fail(function(err) { throw err })
+      .fail(function(err) {
+        process.stdout.write('An API error occured. Light may be color-enabled. \n');
+      })
       .done();
 }
 
