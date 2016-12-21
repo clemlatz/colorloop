@@ -49,24 +49,38 @@ const setColorLoop = function() {
     return;
   }
 
-  if (!light) {
-    process.stdout.write(`Specify the light to set in colorloop with the --light argument. I will remember it next time. \n`);
-    process.exit();
-  }
-
   const api = new hue.HueApi(host, username),
     state = hue.lightState.create()
 
-    api.setLightState(light, state.on().effectColorLoop())
-      .then(function(result) {
-        if (result === true) {
-          process.stdout.write('Colorloop mode enabled! \n');
-        }
-      })
-      .fail(function(err) {
-        process.stdout.write('An API error occured. Light may be color-enabled. \n');
-      })
-      .done();
+  if (!light) {
+    api.lights(function(err, result) {
+      if (err) throw err;
+
+      // Get colored lights id
+      const colored = result.lights.filter(function(light) {
+        return (typeof light.state.colormode !== 'undefined');
+      }).map((light) => light.id);
+
+      process.stdout.write(`Specify the light to set in colorloop with the --light argument. I will remember it next time.
+Available lights with color mode: ${colored.join(', ')}\n`);
+
+      console.log(lights.lights);
+      process.exit();
+    });
+    return;
+  }
+
+
+  api.setLightState(light, state.on().effectColorLoop())
+    .then(function(result) {
+      if (result === true) {
+        process.stdout.write('Colorloop mode enabled! \n');
+      }
+    })
+    .fail(function(err) {
+      process.stdout.write('An API error occured. Light may not be color-enabled. \n');
+    })
+    .done();
 }
 
 // If host is undefined, look for the 1st bridge and get IP address
