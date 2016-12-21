@@ -13,6 +13,7 @@
   "license": "MIT",
   "dependencies": {
     "nconf": "^0.8.4",
-    "node-hue-api": "^2.3.0"
+    "node-hue-api": "^2.3.0",
+    "yargs": "^6.5.0"
   }
 }
