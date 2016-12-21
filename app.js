@@ -5,10 +5,21 @@
 const nconf = require('nconf');
 const hue   = require('node-hue-api');
 const fs    = require('fs');
+const yargs = require('yargs')
 
 // Load configuration
 const configFile = process.env.HOME + '/.colorloop'
 nconf.argv().env().file({ file: configFile });
+
+yargs
+   .usage('$0 --light [id]')
+   .describe('light', 'the light to set in color loop mode')
+   .help()
+   .argv
+
+if (typeof yargs.argv.light !== 'undefined' && yargs.argv.light !== true) {
+  nconf.set('light', yargs.argv.light)
+}
 
 let username = nconf.get('username');
 let light = nconf.get('light');
@@ -35,10 +46,15 @@ const setColorLoop = function() {
     return;
   }
 
+  if (!light) {
+    process.stdout.write(`Specify the light to set in colorloop with the --light argument. I will remember it next time. \n`);
+    process.exit();
+  }
+
   const api = new hue.HueApi(host, username),
     state = hue.lightState.create()
 
-    api.setLightState(lightId, state.on().effectColorLoop())
+    api.setLightState(light, state.on().effectColorLoop())
       .then(function(result) {
         if (result === true) {
           process.stdout.write('Color loop mode enabled! \n');
