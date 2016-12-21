@@ -17,4 +17,10 @@ in my Christmas tree. Because I can't get Siri to do it for me.
 Press the link button on your Hue bridge before the first use. Be sure
 your computer and your bridge are the same network.
 
-    $ colorloop
+Set a light in colorloop mode:
+
+    $ colorloop --light [id]
+
+You must specify the light's id on first use. After that, the light's id will
+be saved and you only need to use the `--light` option if you wish to target
+another light.
