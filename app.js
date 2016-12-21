@@ -1,3 +1,5 @@
+'use strict';
+
 const nconf = require('nconf');
 const hue   = require("node-hue-api");
 
