@@ -61,12 +61,10 @@ const setColorLoop = function() {
       // Get colored lights id
       const colored = result.lights.filter(function(light) {
         return (typeof light.state.colormode !== 'undefined');
-      }).map((light) => light.id);
+      }).map((light) => `${light.id} (${light.name})`);
 
-      process.stdout.write(`Specify the light to set in colorloop with the --light argument. I will remember it next time.
-Available lights with color mode: ${colored.join(', ')}\n`);
-
-      console.log(lights.lights);
+      process.stdout.write(`Specify the light to set in colorloop with the --light [id] argument. I will remember it next time. \n`);
+      process.stdout.write(`Available lights with colorloop mode have the following ids: ${colored.join(', ')} \n`);
       process.exit();
     });
     return;
